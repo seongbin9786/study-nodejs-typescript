@@ -6,6 +6,7 @@ var passport = require('passport');
 
 require('./db_init');
 require('./passport_init');
+var auth = require('./auth/JwtFilter');
 
 var multer = require('multer');
 var upload = multer({});
@@ -23,7 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 
-app.use('/api', passport.authenticate('jwt', { session: false }), apiRouter);
+app.use('/api', auth, apiRouter);
 app.use('/register', upload.none(), registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
 app.use('/login', upload.none(), loginRouter);
 
