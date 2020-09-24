@@ -13,7 +13,7 @@ NodeJs와 Typescript 스택으로 백엔드 개발해보기 프로젝트
     NODE_ENV=development
     DEBUG=app:*
     PORT=3000
-    JWT_SECRET=
+    JWT_SECRET={some_random_string}
     ```
 
 2. 의존성 설치
@@ -28,25 +28,19 @@ NodeJs와 Typescript 스택으로 백엔드 개발해보기 프로젝트
 
 ## Current Features
 
-1. `POST /register (enctype: formdata)`
-
-2. `POST /login (enctype: formdata)`
-
-3. `GET /api (returns 200 if authenticated)`
+1. Go check out `localhost:3000/docs`
 
 ## Current TODO
 
 1. `bcrypt` 활용
 
-2. `Prisma` 도입
-
 ## Requirements
 
 1. Jest 기반 Testing 나아가서 TDD, BDD 활용
 
-2. Graph QL API
+2. https Support
 
-3. Stateless Authentication/Authorization
+3. Es Interop
 
 4. NoSQL
 

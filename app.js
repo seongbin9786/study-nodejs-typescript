@@ -4,6 +4,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
 
+// Documentation
+var swaggerUi = require('swagger-ui-express');
+var YAML = require('yamljs');
+var swaggerDocument = YAML.load('./openapi.yml');
+
+// Security
 require('./db_init');
 require('./passport_init');
 var auth = require('./auth/JwtFilter');
@@ -27,5 +33,7 @@ app.use(passport.initialize());
 app.use('/api', auth, apiRouter);
 app.use('/register', upload.none(), registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
 app.use('/login', upload.none(), loginRouter);
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
 
 module.exports = app;

@@ -9,7 +9,7 @@ router.post('/', async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email, password });
     if (user === null) { // Promise라서 next()를 호출해줘야 함.
-      res.status(400).json();
+      res.status(400).send('계정이 존재하지 않거나 잘못된 요청입니다.');
       return next();
     }
     const jwt = jwtPublisher(user._id);
