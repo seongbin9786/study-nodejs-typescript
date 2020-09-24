@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
 
-var auth = require('../auth/JwtFilter');
+const router = express.Router();
+
+const auth = require('../auth/JwtFilter');
 
 /* GET users listing. */
-router.get('/', auth, function(req, res) {
+router.get('/', auth, (req, res) => {
   const { headers } = req;
   res.json({ headers });
 });

@@ -1,27 +1,28 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var passport = require('passport');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const passport = require('passport');
 
 // Documentation
-var swaggerUi = require('swagger-ui-express');
-var YAML = require('yamljs');
-var swaggerDocument = YAML.load('./openapi.yml');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+const swaggerDocument = YAML.load('./openapi.yml');
 
 // Security
 require('./db_init');
 require('./passport_init');
-var auth = require('./auth/JwtFilter');
+const multer = require('multer');
+const auth = require('./auth/JwtFilter');
 
-var multer = require('multer');
-var upload = multer({});
+const upload = multer({});
 
-var apiRouter = require('./routes/api');
-var loginRouter = require('./routes/login');
-var registerRouter = require('./routes/register');
+const apiRouter = require('./routes/api');
+const loginRouter = require('./routes/login');
+const registerRouter = require('./routes/register');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json()); // body-parser가 express로 merge됨.
