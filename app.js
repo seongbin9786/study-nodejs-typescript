@@ -21,6 +21,8 @@ const upload = multer({});
 const apiRouter = require('./routes/api');
 const loginRouter = require('./routes/login');
 const registerRouter = require('./routes/register');
+const refreshRouter = require('./routes/refresh');
+const GlobalErrorHandler = require('./middlewares/GlobalErrorHandler');
 
 const app = express();
 
@@ -34,7 +36,10 @@ app.use(passport.initialize());
 app.use('/api', auth, apiRouter);
 app.use('/register', upload.none(), registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
 app.use('/login', upload.none(), loginRouter);
+app.use('/refresh', upload.none(), refreshRouter);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
+
+app.use(GlobalErrorHandler);
 
 module.exports = app;

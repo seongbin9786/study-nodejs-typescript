@@ -1,16 +1,17 @@
 const express = require('express');
+const debug = require('debug')('app:register');
 
 const router = express.Router();
 
-const JwtPublisher = require('../auth/JwtPublisher');
+const JwtPublish = require('../auth/JwtPublish');
 
 const User = require('../models/User');
 
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
   const { email, password, name } = req.body;
   User.findOne({ email }, (err, check) => {
     if (check) {
-      res.status(400).send('계정이 존재하지 않거나 잘못된 요청입니다.');
+      res.status(400).send('중복된 계정입니다.');
       return;
     }
     if (err) {
@@ -18,18 +19,23 @@ router.post('/', (req, res, next) => {
       return;
     }
     const user = new User({ email, password, name });
-    user.save((err, { id, email, name }) => {
-      if (err) {
-        res.status(500).send('서버 오류가 발생했습니다.');
-        return;
-      }
-      res.status(201).json({
-        id,
-        email,
-        name,
-        token: JwtPublisher(id),
+    user.save()
+      .then(({ id }) => {
+        if (err) {
+          debug(err);
+          res.status(500).send('서버 오류가 발생했습니다.');
+          return;
+        }
+        res.status(201).json({
+          id,
+          email,
+          name,
+          token: JwtPublish(id, false),
+        });
+      }).catch((dbError) => {
+        debug(dbError);
+        res.status(500).send(`서버 오류가 발생했습니다: ${dbError}`);
       });
-    });
   });
 });
 
