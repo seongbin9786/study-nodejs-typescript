@@ -40,7 +40,6 @@ components:
   schemas:
     NewUserRequest:
       allOf:
-          - $ref: '#/components/schemas/NewUserRequest'
           - type: object
             required:
               - email
@@ -52,6 +51,7 @@ components:
               email:
                 type: string
                 example: demo@kbpf.com
+          - $ref: '#/components/schemas/UserPatchRequest'
           
     UserPatchRequest:
       type: object
@@ -229,7 +229,7 @@ paths:
     post:
       tags:
         - User
-      description: 회원가입 성공 시 바로 Token 발행
+      description: 회원가입 성공 시 바로 Token 발행 (role은 권한 있는 사용자만 지정 가능)
       # summary: 엔드포인트 바로 옆 텍스트
       requestBody:
         content:
