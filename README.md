@@ -1,7 +1,7 @@
 
 # Study NodeJs Typescript
 
-NodeJs와 Typescript 스택으로 백엔드 개발해보기 프로젝트
+NodeJs, Typescript 스택으로 백엔드 개발
 
 - 프레임워크는 `express@latest` 기반으로 진행 (minimal)
 
@@ -13,7 +13,10 @@ NodeJs와 Typescript 스택으로 백엔드 개발해보기 프로젝트
     NODE_ENV=development
     DEBUG=app:*
     PORT=3000
-    JWT_SECRET={some_random_string}
+    JWT_SECRET={any_string_is_fine}
+
+    JWT_ACC_EXP = 5m
+    JWT_RFR_EXP = 30m
     ```
 
 2. 의존성 설치
@@ -30,18 +33,16 @@ NodeJs와 Typescript 스택으로 백엔드 개발해보기 프로젝트
 
 1. Go check out `localhost:3000/docs`
 
-## Current TODO
+## Next Move
 
-1. `bcrypt` 활용
+1. User Schema Validation on create, update
 
-## Requirements
+## Milestone
 
 1. Jest 기반 Testing 나아가서 TDD, BDD 활용
 
 2. https Support
 
-3. Es Interop
+3. Learn more about Mongo and Mongoose
 
-4. NoSQL
-
-5. Typescript Support
+4. Typescript Support
