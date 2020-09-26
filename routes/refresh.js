@@ -7,7 +7,7 @@ const router = express.Router();
 
 const { JwtSecret } = require('../auth/JwtPolicy');
 const JwtPublish = require('../auth/JwtPublish');
-const { JwtStoreId } = require('../auth/JwtStructure');
+const { JwtStoreContent } = require('../auth/JwtStructure');
 
 /*
   TODO:
@@ -17,14 +17,15 @@ const { JwtStoreId } = require('../auth/JwtStructure');
 */
 router.post('/', asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
-  // TODO: refreshToken이 없을 때 예외처리
+  if (!refreshToken) {
+    return res.status(400).send('토큰이 만료되었거나 비정상 리프레시 토큰입니다.');
+  }
   jwt.verify(refreshToken, JwtSecret, (err, decoded) => {
     if (err) {
       debug(`Jwt Verify Error: ${err.message}`);
-      res.status(400).send('토큰이 만료되었거나 비정상 리프레시 토큰입니다.');
-      return;
+      return res.status(400).send('토큰이 만료되었거나 비정상 리프레시 토큰입니다.');
     }
-    const payload = JwtStoreId(decoded);
+    const payload = JwtStoreContent(decoded);
     res.status(200).json({
       accessToken: JwtPublish(payload, false),
       refreshToken: JwtPublish(payload, true),

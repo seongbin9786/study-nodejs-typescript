@@ -5,21 +5,24 @@ const asyncHandler = require('express-async-handler');
 const router = express.Router();
 const User = require('../models/User');
 const JwtPublish = require('../auth/JwtPublish');
+const { JwtStoreContent } = require('../auth/JwtStructure');
 
 router.post('/', asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email, password });
-  if (user === null) {
+  const { email, password: inputPw } = req.body;
+  // salt, password를 의도적으로 Select
+  const user = await User.findOne({ email }).select('+password +salt').exec();
+  debug('user: %o', user);
+  if (user === null || !user.comparePassword(inputPw)) {
     return res.status(400).send('계정이 존재하지 않거나 잘못된 요청입니다.');
   }
-  const jwt = JwtPublish({ id: user._id }, false);
-
-  debug(user);
-
+  const {
+    password, salt, ...userInfo // 왜 여기선 _id를 써야하는걸까?
+  } = user.toObject();
+  const payload = JwtStoreContent(user);
   res.status(200).json({
-    email: user.email,
-    name: user.name,
-    token: jwt,
+    ...userInfo,
+    accessToken: JwtPublish(payload, false),
+    refreshToken: JwtPublish(payload, true),
   });
 }));
 

@@ -3,19 +3,17 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
-const User = require('./models/User');
 const { JwtSecret } = require('./auth/JwtPolicy');
-const { JwtResolveId } = require('./auth/JwtStructure');
+const { ExtractJwtContent } = require('./auth/JwtStructure');
+
+const User = require('./models/User');
 
 passport.use(new JwtStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: JwtSecret,
 }, (payload, done) => {
-  const id = JwtResolveId(payload);
-  debug('Authentication succeded [id:%o]', id);
-  User.findById(id, (err, user) => {
-    if (user === null) { return done(err, false); }
-    if (user) { return done(null, user); }
-    return done(null, false);
-  });
+  const { id, role } = ExtractJwtContent(payload);
+  debug('Current USER: <id: %o, <role: %o>', id, role);
+  // 필요한 경우에 user를 find하는게 맞음.
+  return done(null, User({ id, role })); // new User는 안되네. 신기하다
 }));

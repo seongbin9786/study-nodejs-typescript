@@ -14,11 +14,12 @@ const swaggerDocument = YAML.load('./openapi.yml');
 require('./db_init');
 require('./passport_init');
 const multer = require('multer');
-const auth = require('./auth/JwtFilter');
+const JwtFilter = require('./auth/JwtFilter');
+const AnonymousCredentialProvider = require('./auth/AnonymousCredentialProvider');
 
 const upload = multer({});
 
-const apiRouter = require('./routes/api');
+const userRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
 const registerRouter = require('./routes/register');
 const refreshRouter = require('./routes/refresh');
@@ -32,8 +33,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+app.use(JwtFilter);
+app.use(AnonymousCredentialProvider);
 
-app.use('/api', auth, apiRouter);
+app.use('/users', userRouter);
 app.use('/register', upload.none(), registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
 app.use('/login', upload.none(), loginRouter);
 app.use('/refresh', upload.none(), refreshRouter);

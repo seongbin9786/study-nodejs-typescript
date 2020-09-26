@@ -5,3 +5,5 @@ env:
 rules:
     no-underscore-dangle: 
       - off
+    consistent-return:
+      - off

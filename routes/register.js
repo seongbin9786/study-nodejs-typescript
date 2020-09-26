@@ -7,34 +7,31 @@ const JwtPublish = require('../auth/JwtPublish');
 
 const User = require('../models/User');
 
+// TODO: validate email is present and is in string format.
+// (이거 좀 SQL Injection처럼 공격 대상 될 수 있을 거 같은데..)
 router.post('/', (req, res) => {
-  const { email, password, name } = req.body;
-  User.findOne({ email }, (err, check) => {
-    if (check) {
-      res.status(400).send('중복된 계정입니다.');
-      return;
+  User.findOne({ email: req.body.email }, (_, found) => {
+    if (found) {
+      return res.status(400).send('중복된 계정입니다.');
     }
-    if (err) {
-      res.status(500).send('서버 오류가 발생했습니다.');
-      return;
+    debug('body: %o', req.body);
+    debug('user: %o', req.user);
+    if (req.body.role && (!req.user || !req.user.checkPermission('관리자'))) {
+      return res.status(403).send('권한이 부족합니다.');
     }
-    const user = new User({ email, password, name });
-    user.save()
-      .then(({ id }) => {
-        if (err) {
-          debug(err);
-          res.status(500).send('서버 오류가 발생했습니다.');
-          return;
-        }
-        res.status(201).json({
-          id,
-          email,
-          name,
-          token: JwtPublish(id, false),
-        });
-      }).catch((dbError) => {
-        debug(dbError);
-        res.status(500).send(`서버 오류가 발생했습니다: ${dbError}`);
+    const newUser = new User(req.body);
+    // 이렇게 callback으로 수행하면,
+    // 여기서 catch하지 않으면 globalErrorHandler로 나가지 않네.
+    // 그렇다고 save에 wrap을 할 수도 없고..
+    newUser.save()
+      .then(({ id, email, name }) => res.status(201).json({
+        id,
+        email,
+        name,
+        token: JwtPublish(({ id }), false),
+      })).catch((err) => {
+        debug('Error while saving: %o', err);
+        return res.status(500).send(`서버 오류가 발생했습니다: ${err.message}`);
       });
   });
 });

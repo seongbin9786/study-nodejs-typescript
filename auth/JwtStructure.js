@@ -3,9 +3,10 @@
         id: MongoDbId
         iat: [current]
         exp: [5m | 30m]
+        role: ['일반회원','관리자'] // 추후 암호화해야.
     }
 */
 module.exports = {
-  JwtResolveId: (payload) => payload.id,
-  JwtStoreId: ({ id }) => ({ id }),
+  ExtractJwtContent: (payload) => ({ id: payload.id, role: payload.role }),
+  JwtStoreContent: ({ id, role }) => ({ id, role }),
 };
