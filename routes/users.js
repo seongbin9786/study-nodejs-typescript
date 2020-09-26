@@ -34,7 +34,6 @@ router.patch('/:id', (req, res) => {
   if ((tryRoleElevation || isNotSelf) && !isAdmin) {
     return res.status(403).send(FORBIDDEN);
   }
-  // TODO: doc update: 이메일에 관해 중복 여부를 체크하기보다 변경 불가능하게 만들기.
   const { id: _id, email, ...content } = req.body;
   User.findOneAndUpdate({ _id }, { $set: content }, // $set으로 이렇게 한 방에 가능하니 너무 좋다.
     { runValidators: true, new: true }, (err, result) => {

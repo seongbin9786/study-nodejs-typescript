@@ -38,6 +38,36 @@ components:
           example: 서버 오류가 발생했습니다.
 
   schemas:
+
+    UserCredentialCommon:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email 형식이어야 합니다. 유일해야 하며 변경할 수 없습니다.
+          example: demo@kbpf.com
+        password:
+          type: string
+          description: 8글자 이상이어야 하며 특수문자를 포함해야 합니다.
+          format: password
+          example: test
+
+    UserCommon:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 2-10글자 사이어야 하며 공백이 적용되지 않습니다.
+          example: 한폴연
+        mobile:
+          type: string
+          description: 전화번호 형식이어야 합니다. 검증은 하지 않습니다.
+          example: 010-1230-0123
+        address:
+          type: string
+          description: 시/군/구 명을 포함해야 합니다. 검증은 하지 않습니다.
+          example: 서울시 종로구
+
     NewUserRequest:
       allOf:
           - type: object
@@ -50,33 +80,29 @@ components:
             properties:
               email:
                 type: string
+                description: Email 형식이어야 합니다. 유일해야 하며 변경할 수 없습니다.
                 example: demo@kbpf.com
           - $ref: '#/components/schemas/UserPatchRequest'
           
     UserPatchRequest:
-      type: object
-      required:
-        - password
-        - name
-        - mobile
-        - address
-      properties:
-        password:
-          type: string
-          format: password
-          example: test
-        name:
-          type: string
-          example: 한폴연
-        mobile:
-          type: string
-          example: 010-1230-0123
-        address:
-          type: string
-          example: 서울시 종로구
-        role:
-          type: string
-          example: 일반회원
+      allOf:
+        - $ref: '#/components/schemas/UserCommon'
+        - type: object
+          required:
+            - password
+            - name
+            - mobile
+            - address
+          properties:
+            password:
+              type: string
+              description: 8글자 이상이어야 하며 특수문자 포함입니다.
+              format: password
+              example: test
+            role:
+              type: string
+              description: 관리자에 한정해 회원의 권한을 지정해 등록할 수 있습니다.
+              example: 일반회원
 
     User:
       allOf:
@@ -84,34 +110,21 @@ components:
           properties:
             email:
               type: string
+              description: Email 형식이어야 합니다. 유일해야 하며 변경할 수 없습니다.
               example: demo@kbpf.com
-            name:
-              type: string
-              example: 한폴연
-            mobile:
-              type: string
-              example: 010-1230-0123
-            address:
-              type: string
-              example: 서울시 종로구
             role:
               type: string
               example: 일반회원
+        - $ref: '#/components/schemas/UserCommon'
         - $ref: "#/components/schemas/UserTicket"
 
     LoginRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          example: demo@kbpf.com
-        password:
-          type: string
-          format: password
-          example: test
+      allOf:
+        - type: object
+          required:
+            - email
+            - password
+        - $ref: '#/components/schemas/UserCredentialCommon'
 
     LoginResponse:
       allOf:
@@ -120,9 +133,11 @@ components:
           properties:
             email:
               type: string
+              description: Email 형식이어야 합니다. 유일해야 하며 변경할 수 없습니다.
               example: demo@kbpf.com
             name:
               type: string
+              description: 2-10글자 사이어야 하며 공백이 적용되지 않습니다.
               example: 한폴연
             accessToken:
               type: string
@@ -136,9 +151,11 @@ components:
       properties:
         ticket_type:
           type: string
+          description: 사용자의 이용권 명칭을 표시합니다.
           example: 주 2회 이용권
         ticket_expired_at:
           type: string
+          description: 사용자의 이용권 만료시점을 표시합니다.
           example: 2020-12-26 12:00
 
   securitySchemes:
@@ -303,7 +320,7 @@ paths:
     patch:
       tags:
         - User
-      description: ID에 대응되는 사용자 정보 수정
+      description: ID에 대응되는 사용자 정보 수정 (Id, Email 제외, Role은 관리자만 변경 가능)
       parameters:
         - $ref: "#/components/parameters/userIdPath"
 
@@ -335,7 +352,7 @@ paths:
     delete:
       tags:
         - User
-      description: 사용자 ID에 대응되는 사용자를 제거 (SET removed = 1)
+      description: 사용자 ID에 대응되는 사용자를 제거 (SET deleted = 1)
       parameters:
         - $ref: "#/components/parameters/userIdPath"
 

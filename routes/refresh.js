@@ -12,7 +12,7 @@ const { JwtStoreContent } = require('../auth/JwtStructure');
 /*
   TODO:
   1. Redis 사용
-  2. 각종 폼의 validation, error hadnling 구현
+  2. Update와 Create 시에 Validation 추가
   3.
 */
 router.post('/', asyncHandler(async (req, res) => {
