@@ -157,7 +157,7 @@ components:
           type: string
           description: 사용자의 이용권 만료시점을 표시합니다.
           example: 2020-12-26 12:00
-
+  
   securitySchemes:
     auth:
       type: http
@@ -262,10 +262,23 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
         "400":
-          description: 중복 계정으로 회원가입 시도
+          description: 잘못된 형식의 요청
           content:
-            text/plain:
-              example: 중복된 계정입니다.
+            application/json:
+              examples:
+                dup:
+                  summary: 중복된 계정
+                  value: 
+                    "email": "duplicate"
+                missing:
+                  summary: 필수 입력 항목 누락
+                  value:
+                    address: "required"
+                    mobile: "required"
+                    name: "required"
+                    password: "required"
+                    email: "required"
+
         "500":
           $ref: "#/components/responses/internalServerError"
 
