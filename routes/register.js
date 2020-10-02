@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const debug = require('debug')('app:register');
 
 const router = express.Router();
@@ -30,6 +31,14 @@ router.post('/', (req, res) => {
         name,
         token: JwtPublish(({ id }), false),
       })).catch((err) => {
+        if (err instanceof mongoose.Error.ValidationError) {
+          const errors = Object.values(err.errors);
+          const msgs = errors.reduce((acc, e) => {
+            acc[e.path] = e.kind;
+            return acc;
+          }, {});
+          return res.status(400).json(msgs);
+        }
         debug('Error while saving: %o', err);
         return res.status(500).send(`서버 오류가 발생했습니다: ${err.message}`);
       });
