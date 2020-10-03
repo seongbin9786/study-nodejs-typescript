@@ -35,7 +35,11 @@ NodeJs, Typescript 스택으로 백엔드 개발
 
 ## Next Move
 
-1. User Schema Validation on create, update
+1. User Schema Validation on create, update (:heavy_check_mark:)
+
+2. Ticket API - CRUD, Validation
+
+3. 
 
 ## Milestone
 

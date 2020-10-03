@@ -8,6 +8,8 @@ const JwtPublish = require('../auth/JwtPublish');
 
 const User = require('../models/User');
 
+const validationFormatter = require('./validationErrorFormatter');
+
 // TODO: validate email is present and is in string format.
 // (이거 좀 SQL Injection처럼 공격 대상 될 수 있을 거 같은데..)
 router.post('/', (req, res) => {
@@ -24,19 +26,17 @@ router.post('/', (req, res) => {
     // 이렇게 callback으로 수행하면,
     // 여기서 catch하지 않으면 globalErrorHandler로 나가지 않네.
     // 그렇다고 save에 wrap을 할 수도 없고..
-    newUser.save()
+    newUser
+      .save()
       .then(({ id, email, name }) => res.status(201).json({
         id,
         email,
         name,
-        token: JwtPublish(({ id }), false),
-      })).catch((err) => {
+        token: JwtPublish({ id }, false),
+      }))
+      .catch((err) => {
         if (err instanceof mongoose.Error.ValidationError) {
-          const errors = Object.values(err.errors);
-          const msgs = errors.reduce((acc, e) => {
-            acc[e.path] = e.kind;
-            return acc;
-          }, {});
+          const msgs = validationFormatter(err);
           return res.status(400).json(msgs);
         }
         debug('Error while saving: %o', err);

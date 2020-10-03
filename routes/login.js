@@ -10,7 +10,8 @@ const { JwtStoreContent } = require('../auth/JwtStructure');
 router.post('/', asyncHandler(async (req, res) => {
   const { email, password: inputPw } = req.body;
   // salt, password를 의도적으로 Select
-  const user = await User.findOne({ email }).select('+password +salt').exec();
+  // deleted는 왜 나오는거야,, plugin이 관리 안하네
+  const user = await User.findOne({ email }).select('+password +salt -deleted').exec();
   debug('user: %o', user);
   if (user === null || !user.comparePassword(inputPw)) {
     return res.status(400).send('계정이 존재하지 않거나 잘못된 요청입니다.');

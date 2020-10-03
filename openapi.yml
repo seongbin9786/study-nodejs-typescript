@@ -38,7 +38,6 @@ components:
           example: 서버 오류가 발생했습니다.
 
   schemas:
-
     UserCredentialCommon:
       type: object
       properties:
@@ -70,23 +69,23 @@ components:
 
     NewUserRequest:
       allOf:
-          - type: object
-            required:
-              - email
-              - password
-              - name
-              - mobile
-              - address
-            properties:
-              email:
-                type: string
-                description: Email 형식이어야 합니다. 유일해야 하며 변경할 수 없습니다.
-                example: demo@kbpf.com
-          - $ref: '#/components/schemas/UserPatchRequest'
-          
+        - type: object
+          required:
+            - email
+            - password
+            - name
+            - mobile
+            - address
+          properties:
+            email:
+              type: string
+              description: Email 형식이어야 합니다. 유일해야 하며 변경할 수 없습니다.
+              example: demo@kbpf.com
+        - $ref: "#/components/schemas/UserPatchRequest"
+
     UserPatchRequest:
       allOf:
-        - $ref: '#/components/schemas/UserCommon'
+        - $ref: "#/components/schemas/UserCommon"
         - type: object
           required:
             - password
@@ -115,7 +114,7 @@ components:
             role:
               type: string
               example: 일반회원
-        - $ref: '#/components/schemas/UserCommon'
+        - $ref: "#/components/schemas/UserCommon"
         - $ref: "#/components/schemas/UserTicket"
 
     LoginRequest:
@@ -124,7 +123,7 @@ components:
           required:
             - email
             - password
-        - $ref: '#/components/schemas/UserCredentialCommon'
+        - $ref: "#/components/schemas/UserCredentialCommon"
 
     LoginResponse:
       allOf:
@@ -157,7 +156,7 @@ components:
           type: string
           description: 사용자의 이용권 만료시점을 표시합니다.
           example: 2020-12-26 12:00
-  
+
   securitySchemes:
     auth:
       type: http
@@ -212,7 +211,7 @@ paths:
           application/json:
             schema:
               required:
-                  - refreshToken
+                - refreshToken
               properties:
                 refreshToken:
                   type: string
@@ -246,7 +245,7 @@ paths:
     post:
       tags:
         - User
-      description: | 
+      description: |
         - 회원가입 성공 시 바로 Token 발행 (role은 권한 있는 사용자만 지정 가능). 
         - email: 이메일 규칙 적용됨.
         - mobile: 휴대폰 번호 규칙 적용됨.
@@ -275,7 +274,7 @@ paths:
               examples:
                 dup:
                   summary: 중복된 계정
-                  value: 
+                  value:
                     "email": "duplicate"
                 missing:
                   summary: 필수 입력 항목 누락
@@ -347,7 +346,12 @@ paths:
     patch:
       tags:
         - User
-      description: ID에 대응되는 사용자 정보 수정 (Id, Email 제외, Role은 관리자만 변경 가능)
+      description: |
+        - ID에 대응되는 사용자 정보 수정 (Id, Email은 제외됨, Role은 관리자만 변경 가능)
+        - mobile: 휴대폰 번호 규칙 적용됨.
+        - password: 대소문자, 특수문자 포함 8자 이상 
+        - name: 2글자 이상
+        - address: [아직 미시행] 추후 Enum혹은 코드로 관리 예정 (ex: 관악구)
       parameters:
         - $ref: "#/components/parameters/userIdPath"
 
@@ -356,7 +360,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UserPatchRequest"
-          
+
       responses:
         "200":
           description: 변경된 사용자 정보 반환
@@ -364,6 +368,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "400":
+          description: 잘못된 요청
+          content:
+            application/json:
+              examples:
+                missing:
+                  summary: 필수 입력 항목 누락
+                  value:
+                    address: "required"
+                    mobile: "required"
+                    name: "required"
+                    password: "required"
+                    email: "required"
+                regexp:
+                  summary: 형식 불일치
+                  value:
+                    mobile: "regexp"
+                    name: "minlength"
+                    password: "regexp"
+                    email: "regexp"
         "401":
           $ref: "#/components/responses/unauthorized"
         "403":
