@@ -39,7 +39,7 @@ NodeJs, Typescript 스택으로 백엔드 개발
 
 2. Ticket API - CRUD, Validation
 
-3. 
+3. 공부하면서 참조한 글들, 작성한 공부 문서들 업로드
 
 ## Milestone
 
