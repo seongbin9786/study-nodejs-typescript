@@ -246,7 +246,14 @@ paths:
     post:
       tags:
         - User
-      description: 회원가입 성공 시 바로 Token 발행 (role은 권한 있는 사용자만 지정 가능)
+      description: | 
+        - 회원가입 성공 시 바로 Token 발행 (role은 권한 있는 사용자만 지정 가능). 
+        - email: 이메일 규칙 적용됨.
+        - mobile: 휴대폰 번호 규칙 적용됨.
+        - password: 대소문자, 특수문자 포함 8자 이상 
+        - name: 2글자 이상
+        - address: [아직 미시행] 추후 Enum혹은 코드로 관리 예정 (ex: 관악구)
+
       # summary: 엔드포인트 바로 옆 텍스트
       requestBody:
         content:
@@ -262,7 +269,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/LoginResponse"
         "400":
-          description: 잘못된 형식의 요청
+          description: 잘못된 요청
           content:
             application/json:
               examples:
@@ -278,6 +285,13 @@ paths:
                     name: "required"
                     password: "required"
                     email: "required"
+                regexp:
+                  summary: 형식 불일치
+                  value:
+                    mobile: "regexp"
+                    name: "minlength"
+                    password: "regexp"
+                    email: "regexp"
 
         "500":
           $ref: "#/components/responses/internalServerError"

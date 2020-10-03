@@ -22,10 +22,16 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: [true, '이메일은 필수 입력입니다.'],
+    unique: true,
+    match: /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/,
   },
   password: {
     type: String,
     required: [true, '비밀번호는 필수 입력입니다.'],
+    // 8자 이상의 대소문자, 특수문자 포함
+    // 참고: https://stackoverflow.com/questions/58767980/aws-cognito-password-regex
+    match: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\^$*.[\]{}()?\-“!@#%&/,><’:;|_~`])\S{8,99}$/,
+    msg: 'password',
     select: false,
   },
   salt: {
@@ -35,14 +41,19 @@ const UserSchema = new Schema({
   name: {
     type: String,
     required: [true, '이름은 필수 입력입니다.'],
+    minlength: 2,
   },
   mobile: {
     type: String,
     required: [true, '전화번호는 필수 입력입니다.'],
+    // 참고: https://epthffh.tistory.com/entry/%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EC%A0%95%EA%B7%9C%EC%8B%9D
+    match: /^\d{3}-\d{3,4}-\d{4}$/,
   },
   address: {
     type: String,
     required: [true, '주소는 필수 입력입니다.'],
+    // 추후 Enum으로 관리할 예정
+    // enum: []
   },
   role: {
     type: String,
