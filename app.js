@@ -13,11 +13,8 @@ const swaggerDocument = YAML.load('./openapi.yml');
 // Security
 require('./db_init');
 require('./passport_init');
-const multer = require('multer');
 const JwtFilter = require('./auth/JwtFilter');
 const AnonymousCredentialProvider = require('./auth/AnonymousCredentialProvider');
-
-const upload = multer({});
 
 const userRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
@@ -37,9 +34,9 @@ app.use(JwtFilter);
 app.use(AnonymousCredentialProvider);
 
 app.use('/users', userRouter);
-app.use('/register', upload.none(), registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
-app.use('/login', upload.none(), loginRouter);
-app.use('/refresh', upload.none(), refreshRouter);
+app.use('/register', registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
+app.use('/login', loginRouter);
+app.use('/refresh', refreshRouter);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
 

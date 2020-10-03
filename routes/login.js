@@ -16,7 +16,7 @@ router.post('/', asyncHandler(async (req, res) => {
     return res.status(400).send('계정이 존재하지 않거나 잘못된 요청입니다.');
   }
   const {
-    password, salt, ...userInfo // 왜 여기선 _id를 써야하는걸까?
+    password, salt, ...userInfo
   } = user.toObject();
   const payload = JwtStoreContent(user);
   res.status(200).json({

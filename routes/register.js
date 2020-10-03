@@ -13,7 +13,7 @@ const User = require('../models/User');
 router.post('/', (req, res) => {
   User.findOne({ email: req.body.email }, (_, found) => {
     if (found) {
-      return res.status(400).send('중복된 계정입니다.');
+      return res.status(400).json({ email: 'duplicate' });
     }
     debug('body: %o', req.body);
     debug('user: %o', req.user);
