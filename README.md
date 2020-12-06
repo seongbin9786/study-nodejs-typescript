@@ -1,14 +1,14 @@
 # Study NodeJs Typescript
 
-NodeJs, Express, Mongoose 연습 프로젝트
+NodeJs, Express, Mongoose
 
-- 프레임워크는 `express@latest` 기반으로 진행 (minimal)
-- MongoDB 환경에서 Mongoose를 적절히 활용하는데 첫 번째 초점이,
-- Javascript 기반 백엔드 프로젝트 상에서 확장 가능한 설계를 해보는 것에 두 번째 초점이 맞춰져 있습니다.
+## External Dependencies
 
-## How to run the backend server
+1. Installed MongoDB
 
-1. 환경변수(`.env`) 추가
+## How to run
+
+1. Create `.env` file with the content below:
 
    ```text
    NODE_ENV=development
@@ -20,49 +20,45 @@ NodeJs, Express, Mongoose 연습 프로젝트
    JWT_RFR_EXP = 30m
    ```
 
-2. 의존성 설치
+2. Installing global node dependencies:
 
-   ```bash
-   npm i -g nodemon
+   1. `nodemon`
 
-   // 환경으로 Node, Mongo 설치
-   ```
+3. Run with command: `npm start`
 
-3. `npm start`
+## Code Convention
 
-## How to run the learning materials
+1. Using ESLint and Prettier
 
-`npm run learning`
+2. Checkout the rules from `.prettierrc.yml` and `.eslintrc.yml`
 
 ## Current Features
 
-1. Local documentation available at: `localhost:3000/docs`
+1. Partial (currently supports only User API) Documentation: `localhost:3000/docs`
+
+2. User, Lesson, LessonSpec, Branch CRUD API
+
+## Upcoming Features
+
+1. Up-to-date Documentation
+
+2. Test preset either Jest or Postman
+
+3. Proper authorization for new APIs (other than User API)
 
 ## Libraries serving major roles
 
-1. express [ 학습 곡선 낮음. 분량이 많지 않음 ]
+1. express [ 분량이 적어 학습 곡선 낮음. 직접 처리해야 하는 부분이 매우 많음 ]
 
-2. mongoose [ API 자세하게 학습함 ]
+2. mongoose [ API 자세하게 학습. 문서화 불친절한 편 ]
 
-3. passport [ JWT 필터로 일회성으로 활용함 ]
+3. passport [ JWT 필터로 일회성으로 활용 ]
 
 ## Libraries serving minor roles
 
 1. mongoose-delete
 
 2. express-validator
-
-## Next Learning
-
-1. Learn more about Mongoose middlewares, plugins, etc
-
-2. Setting up some relations between Mongoose Schemas
-
-## Next Features
-
-1. User Schema Validation on create, update (:heavy_check_mark:)
-
-2. Voucher/Lecture/Branch API - CRUD, Validation, Up-to-date documentation
 
 ## Milestone
 
