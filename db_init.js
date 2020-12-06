@@ -1,7 +1,11 @@
 const debug = require('debug')('app:db');
+
+/* [begin] Mongoose Setup */
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/studynodets', {
+const CONNECTION_STRING = 'mongodb://localhost/studynodets';
+
+mongoose.connect(CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -16,3 +20,5 @@ mongoose.set('debug', true);
 db.on('error', debug);
 
 db.once('open', () => debug('Database connected.'));
+
+/* [end] Mongoose Setup */

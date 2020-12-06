@@ -5,6 +5,5 @@ const { JwtSecret, JwtRefreshTimeout, JwtAccessTimeout } = require('./JwtPolicy'
 
 module.exports = (content, isRefresh) => {
   debug('JWT published for: %o, isRefresh: %o', content, isRefresh);
-  return jwt.sign(content, JwtSecret,
-    { expiresIn: isRefresh ? JwtRefreshTimeout : JwtAccessTimeout });
+  return jwt.sign(content, JwtSecret, { expiresIn: isRefresh ? JwtRefreshTimeout : JwtAccessTimeout });
 };

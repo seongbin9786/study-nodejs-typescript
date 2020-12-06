@@ -8,12 +8,18 @@ const { ExtractJwtContent } = require('./auth/JwtStructure');
 
 const User = require('./models/User');
 
-passport.use(new JwtStrategy({
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: JwtSecret,
-}, (payload, done) => {
-  const { id, role } = ExtractJwtContent(payload);
-  debug('Current USER: <id: %o, <role: %o>', id, role);
-  // 필요한 경우에 user를 find하는게 맞음.
-  return done(null, User({ id, role })); // new User는 안되네. 신기하다
-}));
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: JwtSecret,
+    },
+    (payload, done) => {
+      const { id, role, voucher } = ExtractJwtContent(payload);
+      debug('Current USER: <id: %o, <role: %o>, <voucher: %o>', id, role, voucher);
+      // 필요한 경우에 user를 find하는게 맞음.
+      // id로 주면 인식하지 못한다.
+      return done(null, new User({ _id: id, role, voucher }));
+    },
+  ),
+);

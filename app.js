@@ -10,17 +10,25 @@ const YAML = require('yamljs');
 
 const swaggerDocument = YAML.load('./openapi.yml');
 
+// Validation
+const { body } = require('express-validator');
+
 // Security
 require('./db_init');
 require('./passport_init');
 const JwtFilter = require('./auth/JwtFilter');
 const AnonymousCredentialProvider = require('./auth/AnonymousCredentialProvider');
 
-const userRouter = require('./routes/users');
-const loginRouter = require('./routes/login');
-const registerRouter = require('./routes/register');
-const refreshRouter = require('./routes/refresh');
+const UserController = require('./controllers/UserController');
+const LoginController = require('./controllers/LoginController');
+
+const BranchController = require('./controllers/BranchController');
+const LessonController = require('./controllers/LessonController');
+const LessonSpecController = require('./controllers/LessonSpecController');
+
+const RefreshController = require('./controllers/RefreshController');
 const GlobalErrorHandler = require('./middlewares/GlobalErrorHandler');
+const validationResultHandler = require('./middlewares/ExpressValidatorErrorHandler');
 
 const app = express();
 
@@ -33,10 +41,19 @@ app.use(passport.initialize());
 app.use(JwtFilter);
 app.use(AnonymousCredentialProvider);
 
-app.use('/users', userRouter);
-app.use('/register', registerRouter); // POST /users 여야 맞지만 middleware exception을 모르겠다.
-app.use('/login', loginRouter);
-app.use('/refresh', refreshRouter);
+const emailValidator = [body('email').isEmail().withMessage('bad format')];
+
+app.use('/users', emailValidator, validationResultHandler, UserController);
+
+app.use('/login', emailValidator, validationResultHandler, LoginController);
+
+app.use('/branches', BranchController);
+
+app.use('/lessons', LessonController);
+
+app.use('/lesson_specs', LessonSpecController);
+
+app.use('/refresh', RefreshController);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
 

@@ -1,9 +1,18 @@
-extends: airbnb-base
+extends:
+  - 'airbnb-base'
+  - prettier
+
 env:
   es6: true
   browser: true
 rules:
-    no-underscore-dangle: 
-      - off
-    consistent-return:
-      - off
+  no-underscore-dangle:
+    - off
+  consistent-return:
+    - off
+  func-names:
+    - off
+  arrow-parens:
+    - off
+  wrap-iife:
+    - off
