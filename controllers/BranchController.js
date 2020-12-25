@@ -45,24 +45,30 @@ router.post(
   }),
 );
 
-router.patch('/:id', async (req, res) => {
-  const { id } = req.params;
+router.patch(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
 
-  try {
-    const user = await BranchRepository.patchBranch(id, req.params);
-    res.json(user);
-  } catch (e) {
-    if (e instanceof ModelValidationError) {
-      res.status(HttpStatusCodes.BAD_REQUEST).json(e.message);
+    try {
+      const user = await BranchRepository.patchBranch(id, req.params);
+      res.json(user);
+    } catch (e) {
+      if (e instanceof ModelValidationError) {
+        res.status(HttpStatusCodes.BAD_REQUEST).json(e.message);
+      }
+      throw e;
     }
-    throw e;
-  }
-});
+  }),
+);
 
-router.delete('/:id', async (req, res) => {
-  const removed = await BranchRepository.deleteBranchById(req.params.id);
-  if (!removed) return res.status(HttpStatusCodes.NOT_FOUND).send(NOT_FOUND);
-  res.status(HttpStatusCodes.OK).send();
-});
+router.delete(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const removed = await BranchRepository.deleteBranchById(req.params.id);
+    if (!removed) return res.status(HttpStatusCodes.NOT_FOUND).send(NOT_FOUND);
+    res.status(HttpStatusCodes.OK).send();
+  }),
+);
 
 module.exports = router;

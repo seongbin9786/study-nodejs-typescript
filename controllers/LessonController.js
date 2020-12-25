@@ -81,10 +81,13 @@ router.post(
   }),
 );
 
-router.delete('/:id', async (req, res) => {
-  const removed = await LessonRepository.deleteLessonById(req.params.id);
-  if (!removed) return res.status(404).send(NOT_FOUND);
-  res.status(HttpStatusCodes.OK).send();
-});
+router.delete(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const removed = await LessonRepository.deleteLessonById(req.params.id);
+    if (!removed) return res.status(404).send(NOT_FOUND);
+    res.status(HttpStatusCodes.OK).send();
+  }),
+);
 
 module.exports = router;
