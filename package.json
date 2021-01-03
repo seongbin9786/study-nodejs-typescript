@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
+    "lint": "./node_modules/.bin/eslint .",
     "learning": "nodemon ./learning/index.js"
   },
   "dependencies": {
