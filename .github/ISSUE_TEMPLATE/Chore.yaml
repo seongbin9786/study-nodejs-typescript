@@ -1,4 +1,4 @@
-name: Feature
+name: Chore
 description: 새로 개발될 기능을 정의합니다.
 title: "Feat: "
 labels: [feature]

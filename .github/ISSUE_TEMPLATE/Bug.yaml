@@ -1,6 +1,5 @@
 name: Bug Report
 description: 버그를 상세히 묘사합니다.
-title: "Bug: "
 labels: [bug]
 body:
   - type: textarea
@@ -12,7 +11,7 @@ body:
   - type: dropdown
     id: browsers
     attributes:
-      label: 문제가 발생하는 브라우저 (다중 선택)
+      label: 확인한 브라우저 (optional, mutiple)
       multiple: true
       options:
         - Firefox
@@ -22,6 +21,6 @@ body:
   - type: textarea
     id: logs
     attributes:
-      label: 관련 Log 출력 첨부
+      label: 관련 Log 출력 첨부 (optional)
       description: 붙여넣기만 하면 됩니다.
       render: shell
