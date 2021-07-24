@@ -8,9 +8,9 @@ body:
       label: 세부 목적 (주 목적은 이슈 이름으로.)
       description: 세부 목적을 구체적으로 정의합니다.
       value: |
-        - [ ] 
-        - [ ]
-        - [ ]
+        - [  ] 
+        - [  ]
+        - [  ]
     validations:
       required: true
   - type: dropdown
